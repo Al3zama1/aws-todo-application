@@ -1,0 +1,17 @@
+{
+  "name": "todo-app-cdk",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "bootstrap": "cdk bootstrap --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.BootstrapApp\"",
+    "repository:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DockerRepositoryApp\"",
+    "repository:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DockerRepositoryApp\"",
+    "network:deploy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.NetworkApp\"",
+    "network:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.NetworkApp\"",
+    "service:deploy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ServiceApp\"",
+    "service:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ServiceApp\""
+  },
+  "devDependencies": {
+    "aws-cdk": "^2.77.0"
+  }
+}
