@@ -1,0 +1,39 @@
+version: '3.3'
+
+services:
+  postgres:
+    image: postgres:12.9
+    ports:
+      - 5432:5432
+    environment:
+      - POSTGRES_USER=test
+      - POSTGRES_PASSWORD=test
+      - POSTGRES_DB=todo
+  activemq:
+    image: stratospheric/activemq-docker-image
+    ports:
+      - 5672:5672
+      - 61613:61613
+      - 61614:61614
+      - 61616:61616
+  localstack:
+    image: localstack/localstack:0.14.4
+    ports:
+      - 4566:4566
+    environment:
+      - SERVICES=sqs,ses,dynamodb
+      - DEFAULT_REGION=us-west-1
+      - USE_SINGLE_REGION=true
+    volumes:
+      - ./src/test/resources/localstack/local-aws-infrastructure.sh:/docker-entrypoint-initaws.d/init.sh
+  keycloak:
+    image: quay.io/keycloak/keycloak:18.0.0-legacy
+    ports:
+      - 8888:8080
+    environment:
+      - KEYCLOAK_USER=keycloak
+      - KEYCLOAK_PASSWORD=keycloak
+      - DB_VENDOR=h2
+      - JAVA_OPTS=-Dkeycloak.migration.action=import -Dkeycloak.migration.provider=singleFile -Dkeycloak.migration.file=/tmp/todo-app-realm.json
+    volumes:
+      - ./src/test/resources/keycloak/todo-app-realm.json:/tmp/todo-app-realm.json
