@@ -3,6 +3,8 @@
     "applicationName": "todo-app",
     "accountId": "384773585561",
     "region": "us-west-1",
-    "environmentName": "staging"
+    "environmentName": "staging",
+    "springProfile": "aws",
+    "dockerImageUrl": "docker.io/stratospheric/todo-app-v1:latest"
   }
 }
