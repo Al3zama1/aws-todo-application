@@ -1,0 +1,16 @@
+spring:
+  devtools:
+    livereload:
+      enabled: true
+  datasource:
+    url: jdbc:postgresql://localhost:5432/todo
+    username: test
+    password: test
+  cloud:
+    aws:
+      credentials:
+        access-key: bar
+        secret-key: foo
+      endpoint: http://localhost:4566
+      region:
+        static: us-west-1
