@@ -5,6 +5,11 @@
     "region": "us-west-1",
     "environmentName": "staging",
     "springProfile": "aws",
-    "dockerImageUrl": "docker.io/stratospheric/todo-app-v1:latest"
+    "dockerImageUrl": "",
+    "loginPageDomainPrefix": "showcasecloudproject-staging",
+    "applicationUrl": "https://app.showcasecloudproject.com",
+    "hostedZoneDomain": "showcasecloudproject.com",
+    "applicationDomain": "app.showcasecloudproject.com",
+    "sslCertificateArn": "arn:aws:acm:us-west-1:384773585561:certificate/148cd231-b4de-49ba-ae15-f04b67e222e3"
   }
 }
