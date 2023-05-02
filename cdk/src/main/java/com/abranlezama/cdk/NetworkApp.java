@@ -6,15 +6,22 @@ import software.amazon.awscdk.Environment;
 import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 
+import static com.abranlezama.cdk.Validations.requireNonEmpty;
+
 public class NetworkApp {
     public static void main(String[] args) {
         App app = new App();
 
         String environmentName = (String) app.getNode().tryGetContext("environmentName");
+        requireNonEmpty(environmentName, "context variable 'accountId' must not be null");
 
         String accountId = (String) app.getNode().tryGetContext("accountId");
+        requireNonEmpty(accountId, "context variable 'accountId' must not be null");
 
         String region = (String) app.getNode().tryGetContext("region");
+        requireNonEmpty(region, "context variable 'region' must not be null");
+
+        String sslCertificateArn = (String) app.getNode().tryGetContext("sslCertificateArn");
 
         Environment awsEnvironment = makeEnv(accountId, region);
 
@@ -27,12 +34,18 @@ public class NetworkApp {
                         .build()
         );
 
+        Network.NetworkInputParameters inputParameters = new Network.NetworkInputParameters();
+
+        if (sslCertificateArn != null && !sslCertificateArn.isEmpty()) {
+            inputParameters.withSslCertificateArn(sslCertificateArn);
+        }
+
         new Network(
                 networkStack,
                 "Network",
                 awsEnvironment,
                 environmentName,
-                new Network.NetworkInputParameters()
+                inputParameters
         );
 
         app.synth();
