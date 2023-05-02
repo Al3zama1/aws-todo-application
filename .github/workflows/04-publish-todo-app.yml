@@ -8,12 +8,12 @@ env:
   AWS_REGION: ${{ secrets.AWS_REGION }}
 
 on:
-  push:
-    paths:
-      - 'crc/**'
-      - 'cdk/**/*Service*'
-      - 'cdk/pom.xml'
-      - '.github/workflows/04-publish-todo-app.yml'
+#  push:
+#    paths:
+#      - 'crc/**'
+#      - 'cdk/**/*Service*'
+#      - 'cdk/pom.xml'
+#      - '.github/workflows/04-publish-todo-app.yml'
   workflow_dispatch:
 
 jobs:
