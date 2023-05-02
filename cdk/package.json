@@ -6,10 +6,16 @@
     "bootstrap": "cdk bootstrap --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.BootstrapApp\"",
     "repository:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DockerRepositoryApp\"",
     "repository:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DockerRepositoryApp\"",
+    "certificate:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.CertificateApp\"",
+    "certificate:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.CertificateApp\"",
     "network:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.NetworkApp\"",
     "network:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.NetworkApp\"",
+    "domain:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DomainApp\"",
+    "domain:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DomainApp\"",
     "service:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ServiceApp\"",
-    "service:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ServiceApp\""
+    "service:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ServiceApp\"",
+    "cognito:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.CognitoApp\"",
+    "cognito:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.CognitoApp\""
   },
   "devDependencies": {
     "aws-cdk": "^2.77.0"
