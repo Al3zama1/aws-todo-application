@@ -23,4 +23,8 @@ on Amazon MQ.
 - Amazon Web Services
 - AWS CDK, SES, Cognito, RDS, SQS, ECS, and ECR
 
+## Application Architecture
+![Todo application architecture](assets/todo-app-architecture.png)
+
+
 
