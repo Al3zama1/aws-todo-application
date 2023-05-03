@@ -1,0 +1,20 @@
+spring:
+  security:
+    oauth2:
+      client:
+#        The ${} placeholders will be replaced with environment variables that we specify
+#        when deploying our Todo application with ECS (using SpEL - Spring’s powerful expression language).
+        registration:
+          cognito:
+            client-id: ${COGNITO_CLIENT_ID}
+            client-secret: ${COGNITO_CLIENT_SECRET}
+            scope:
+              - openid
+              - profile
+              - email
+        provider:
+          cognito:
+            issuer-uri: ${COGNITO_PROVIDER_URL}
+
+custom:
+  use-cognito-as-identity-provider: true

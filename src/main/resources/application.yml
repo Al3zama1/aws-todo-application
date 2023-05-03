@@ -1,7 +1,18 @@
 spring:
+  application:
+    name: todo-app
+  jpa:
+    hibernate:
+      ddl-auto: validate
+    open-in-view: false
   cloud:
     aws:
+      stack:
+        auto: false
       region:
         static: us-west-1
       sns:
         enabled: false
+      instance:
+        data:
+          enabled: false

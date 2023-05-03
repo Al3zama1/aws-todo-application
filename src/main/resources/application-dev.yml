@@ -6,6 +6,18 @@ spring:
     url: jdbc:postgresql://localhost:5432/todo
     username: test
     password: test
+  security:
+    oauth2:
+      client:
+        registration:
+          cognito:
+            client-id: spring-boot-application
+            client-secret: 27b07baf-53ba-42c6-b11f-6384769cada3
+            scope:
+              - openid
+        provider:
+          cognito:
+            issuer-uri: http://localhost:8888/auth/realms/todo-app
   cloud:
     aws:
       credentials:
@@ -14,3 +26,6 @@ spring:
       endpoint: http://localhost:4566
       region:
         static: us-west-1
+
+custom:
+  use-cognito-as-identity-provider: false
