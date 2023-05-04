@@ -74,6 +74,9 @@ public class ServiceApp {
         Network.NetworkOutputParameters networkOutputParameters = Network
                 .getOutputParametersFromParameterStore(serviceStack, applicationEnvironment.getEnvironmentName());
 
+        MessagingStack.MessagingOutputParameters messagingOutputParameters =
+                MessagingStack.getOutputParametersFromParameterStore(parametersStack, applicationEnvironment);
+
         List<String> securityGroupIdsToGrantIngressFromEcs = Arrays.asList(
                 databaseOutputParameters.getDatabaseSecurityGroupId()
         );
@@ -83,6 +86,7 @@ public class ServiceApp {
                         serviceStack,
                 databaseOutputParameters,
                 cognitoOutputParameters,
+                messagingOutputParameters,
                 springProfile,
                 environmentName))
                 /*
@@ -118,7 +122,25 @@ public class ServiceApp {
                                 .actions(List.of(
                                         "cognito-idp:AdminCreateUser"
                                 ))
-                                .build())
+                                .build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowSQSAccess")
+                                .effect(Effect.ALLOW)
+                                .resources(List.of(
+                                        String.format("arn:aws:sqs:%s:%s:%s", region, accountId, messagingOutputParameters.getTodoSharingQueueName())
+                                ))
+                                .actions(Arrays.asList(
+                                        "sqs:DeleteMessage",
+                                        "sqs:GetQueueUrl",
+                                        "sqs:ListDeadLetterSourceQueues",
+                                        "sqs:ListQueues",
+                                        "sqs:ListQueueTags",
+                                        "sqs:ReceiveMessage",
+                                        "sqs:SendMessage",
+                                        "sqs:ChangeMessageVisibility",
+                                        "sqs:GetQueueAttributes"))
+                                .build()
+                        )
                 );
 
         new Service(
@@ -137,6 +159,7 @@ public class ServiceApp {
             Construct scope,
             PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
             CognitoStack.CognitoOutputParameters cognitoOutputParameters,
+            MessagingStack.MessagingOutputParameters messagingOutputParameters,
             String springProfile,
             String environmentName) {
 
@@ -158,6 +181,7 @@ public class ServiceApp {
         vars.put("COGNITO_USER_POOL_ID", cognitoOutputParameters.getUserPoolId());
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.getLogoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.getProviderUrl());
+        vars.put("TODO_SHARING_QUEUE_NAME", messagingOutputParameters.getTodoSharingQueueName());
         vars.put("ENVIRONMENT_NAME", environmentName);
 
         return vars;
