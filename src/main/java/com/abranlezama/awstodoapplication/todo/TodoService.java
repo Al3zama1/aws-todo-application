@@ -47,6 +47,10 @@ public class TodoService {
         todoRepository.save(existingTodo);
     }
 
+    public void delete(long id, String ownerEmail) {
+        todoRepository.delete(getOwnedTodo(id, ownerEmail));
+    }
+
     public Todo getOwnedOrSharedTodo(long id, String email) {
         Todo todo = this.todoRepository.findById(id)
                 .orElseThrow(NotFoundException::new);
