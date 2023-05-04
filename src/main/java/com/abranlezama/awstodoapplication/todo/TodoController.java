@@ -73,6 +73,8 @@ public class TodoController {
                            @PathVariable("id") long id,
                            Model model) {
         Todo todo = todoService.getOwnedOrSharedTodo(id, user.getEmail());
+
+        model.addAttribute("todo", todo);
         model.addAttribute("editMode", EditMode.UPDATE);
 
         return "todo/edit";
