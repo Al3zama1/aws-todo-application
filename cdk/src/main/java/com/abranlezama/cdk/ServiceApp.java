@@ -2,6 +2,7 @@ package com.abranlezama.cdk;
 
 import dev.stratospheric.cdk.ApplicationEnvironment;
 import dev.stratospheric.cdk.Network;
+import dev.stratospheric.cdk.PostgresDatabase;
 import dev.stratospheric.cdk.Service;
 import software.amazon.awscdk.App;
 import software.amazon.awscdk.Environment;
@@ -9,11 +10,11 @@ import software.amazon.awscdk.Stack;
 import software.amazon.awscdk.StackProps;
 import software.amazon.awscdk.services.iam.Effect;
 import software.amazon.awscdk.services.iam.PolicyStatement;
+import software.amazon.awscdk.services.secretsmanager.ISecret;
+import software.amazon.awscdk.services.secretsmanager.Secret;
+import software.constructs.Construct;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import static com.abranlezama.cdk.Validations.requireNonEmpty;
 
@@ -58,17 +59,32 @@ public class ServiceApp {
                 .env(awsEnvironment)
                 .build());
 
-        CognitoStack.CognitoOutputParameters cognitoOutputParameters =
-                CognitoStack.getOutputParametersFromParameterStore(parametersStack, applicationEnvironment);
-
         Stack serviceStack = new Stack(app, "ServiceStack", StackProps.builder()
                 .stackName(applicationEnvironment.prefix("Service"))
                 .env(awsEnvironment)
                 .build());
 
+        PostgresDatabase.DatabaseOutputParameters databaseOutputParameters =
+                PostgresDatabase.getOutputParametersFromParameterStore(parametersStack, applicationEnvironment);
+
+        CognitoStack.CognitoOutputParameters cognitoOutputParameters =
+                CognitoStack.getOutputParametersFromParameterStore(parametersStack, applicationEnvironment);
+
         Service.DockerImageSource dockerImageSource = new Service.DockerImageSource(dockerImageUrl);
-        Network.NetworkOutputParameters networkOutputParameters = Network.getOutputParametersFromParameterStore(serviceStack, applicationEnvironment.getEnvironmentName());
-        Service.ServiceInputParameters serviceInputParameters = new Service.ServiceInputParameters(dockerImageSource,Collections.emptyList(), environmentVariables(springProfile, cognitoOutputParameters))
+        Network.NetworkOutputParameters networkOutputParameters = Network
+                .getOutputParametersFromParameterStore(serviceStack, applicationEnvironment.getEnvironmentName());
+
+        List<String> securityGroupIdsToGrantIngressFromEcs = Arrays.asList(
+                databaseOutputParameters.getDatabaseSecurityGroupId()
+        );
+
+        Service.ServiceInputParameters serviceInputParameters = new Service
+                .ServiceInputParameters(dockerImageSource, securityGroupIdsToGrantIngressFromEcs, environmentVariables(
+                        serviceStack,
+                databaseOutputParameters,
+                cognitoOutputParameters,
+                springProfile,
+                environmentName))
                 /*
                 Sticky session is used to ensure that users are always directed to the same app instance they first reached.
                 When an authorization code flow is started, the spring boot instance generates a state property to protect against CSRF
@@ -105,7 +121,7 @@ public class ServiceApp {
                                 .build())
                 );
 
-        Service service = new Service(
+        new Service(
                 serviceStack,
                 "Service",
                 awsEnvironment,
@@ -117,14 +133,33 @@ public class ServiceApp {
         app.synth();
     }
 
-    static Map<String, String> environmentVariables(String springProfile, CognitoStack.CognitoOutputParameters cognitoOutputParameters) {
+    static Map<String, String> environmentVariables(
+            Construct scope,
+            PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
+            CognitoStack.CognitoOutputParameters cognitoOutputParameters,
+            String springProfile,
+            String environmentName) {
+
         Map<String, String> vars = new HashMap<>();
+
+        String databaseSecretArn = databaseOutputParameters.getDatabaseSecretArn();
+        ISecret databaseSecret = Secret.fromSecretCompleteArn(scope, "databaseSecret", databaseSecretArn);
+
         vars.put("SPRING_PROFILES_ACTIVE", springProfile);
+        vars.put("SPRING_DATASOURCE_URL",
+                String.format("jdbc:postgresql://%s:%s/%s",
+                        databaseOutputParameters.getEndpointAddress(),
+                        databaseOutputParameters.getEndpointPort(),
+                        databaseOutputParameters.getDbName()));
+        vars.put("SPRING_DATASOURCE_USERNAME", databaseSecret.secretValueFromJson("username").toString());
+        vars.put("SPRING_DATASOURCE_PASSWORD", databaseSecret.secretValueFromJson("password").toString());
         vars.put("COGNITO_CLIENT_ID", cognitoOutputParameters.getUserPoolClientId());
         vars.put("COGNITO_CLIENT_SECRET", cognitoOutputParameters.getUserPoolClientSecret());
         vars.put("COGNITO_USER_POOL_ID", cognitoOutputParameters.getUserPoolId());
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.getLogoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.getProviderUrl());
+        vars.put("ENVIRONMENT_NAME", environmentName);
+
         return vars;
     }
 
