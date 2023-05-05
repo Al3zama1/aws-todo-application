@@ -61,5 +61,10 @@
           <version>${junit.version}</version>
           <scope>test</scope>
         </dependency>
+        <dependency>
+            <groupId>org.passay</groupId>
+            <artifactId>passay</artifactId>
+            <version>1.6.2</version>
+        </dependency>
     </dependencies>
 </project>

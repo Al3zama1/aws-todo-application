@@ -77,8 +77,12 @@ public class ServiceApp {
         MessagingStack.MessagingOutputParameters messagingOutputParameters =
                 MessagingStack.getOutputParametersFromParameterStore(parametersStack, applicationEnvironment);
 
+        ActiveMqStack.ActiveMqOutputParameters activeMqOutputParameters =
+                ActiveMqStack.getOutputParametersFromParameterStore(parametersStack, applicationEnvironment);
+
         List<String> securityGroupIdsToGrantIngressFromEcs = Arrays.asList(
-                databaseOutputParameters.getDatabaseSecurityGroupId()
+                databaseOutputParameters.getDatabaseSecurityGroupId(),
+                activeMqOutputParameters.getActiveMqSecurityGroupId()
         );
 
         Service.ServiceInputParameters serviceInputParameters = new Service
@@ -87,6 +91,7 @@ public class ServiceApp {
                 databaseOutputParameters,
                 cognitoOutputParameters,
                 messagingOutputParameters,
+                activeMqOutputParameters,
                 springProfile,
                 environmentName))
                 /*
@@ -139,6 +144,17 @@ public class ServiceApp {
                                         "sqs:SendMessage",
                                         "sqs:ChangeMessageVisibility",
                                         "sqs:GetQueueAttributes"))
+                                .build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowSendingEmails")
+                                .effect(Effect.ALLOW)
+                                .resources(
+                                        List.of(String.format("arn:aws:ses:%s:%s:identity/showcasecloudproject.com", region, accountId))
+                                )
+                                .actions(List.of(
+                                        "ses:SendEmail",
+                                        "ses:SendRawEmail"
+                                ))
                                 .build()
                         )
                 );
@@ -160,6 +176,7 @@ public class ServiceApp {
             PostgresDatabase.DatabaseOutputParameters databaseOutputParameters,
             CognitoStack.CognitoOutputParameters cognitoOutputParameters,
             MessagingStack.MessagingOutputParameters messagingOutputParameters,
+            ActiveMqStack.ActiveMqOutputParameters activeMqOutputParameters,
             String springProfile,
             String environmentName) {
 
@@ -182,6 +199,9 @@ public class ServiceApp {
         vars.put("COGNITO_LOGOUT_URL", cognitoOutputParameters.getLogoutUrl());
         vars.put("COGNITO_PROVIDER_URL", cognitoOutputParameters.getProviderUrl());
         vars.put("TODO_SHARING_QUEUE_NAME", messagingOutputParameters.getTodoSharingQueueName());
+        vars.put("WEB_SOCKET_RELAY_ENDPOINT", activeMqOutputParameters.getStompEndpoint());
+        vars.put("WEB_SOCKET_RELAY_USERNAME", activeMqOutputParameters.getActiveMqUsername());
+        vars.put("WEB_SOCKET_RELAY_PASSWORD", activeMqOutputParameters.getActiveMqPassword());
         vars.put("ENVIRONMENT_NAME", environmentName);
 
         return vars;
