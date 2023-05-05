@@ -71,6 +71,16 @@ public class Todo {
     )
     private List<Person> collaborators;
 
+    public void addCollaborator(Person person) {
+        collaborators.add(person);
+        person.getCollaborativeTodos().add(this);
+    }
+
+    public void removeCollaborator(Person person) {
+        collaborators.remove(person);
+        person.getCollaborativeTodos().remove(this);
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;
