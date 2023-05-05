@@ -6,6 +6,8 @@ spring:
     url: jdbc:postgresql://localhost:5432/todo
     username: test
     password: test
+  jpa:
+    show-sql: true
   security:
     oauth2:
       client:
@@ -30,3 +32,4 @@ spring:
 custom:
   auto-confirm-collaborations: true
   use-cognito-as-identity-provider: false
+  environment: local

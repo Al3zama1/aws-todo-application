@@ -13,11 +13,10 @@ spring:
         static: us-west-1
       sns:
         enabled: false
-      instance:
-        data:
-          enabled: false
+
 
 custom:
   sharing-queue: application-todo-sharing
   auto-confirm-collaborations: false
   confirm-email-from-address: noreply.showcasecloudproject.com
+  environment: ${ENVIRONMENT_NAME}
