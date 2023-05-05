@@ -16,7 +16,10 @@
     "cognito:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.CognitoApp\"",
     "database:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DatabaseApp\"",
     "database:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.DatabaseApp\"",
-
+    "message:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.MessagingApp\"",
+    "message:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.MessagingApp\"",
+    "activemq:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ActiveMqApp\"",
+    "activemq:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ActiveMqApp\"",
     "service:deploy": "cdk deploy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ServiceApp\"",
     "service:destroy": "cdk destroy --app \"./mvnw -e -q compile exec:java -Dexec.mainClass=com.abranlezama.cdk.ServiceApp\""
   },
