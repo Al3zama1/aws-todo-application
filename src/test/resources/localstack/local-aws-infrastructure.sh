@@ -1,12 +1,12 @@
 #!/bin/sh
 
-awslocal sqs create-queue --queue-name todo-sharing
+awslocal sqs create-queue --queue-name application-todo-sharing
 
-awslocal ses verify-email-identity --email-address noreply@abranlezama.dev
-awslocal ses verify-email-identity --email-address info@abranlezama.dev
-awslocal ses verify-email-identity --email-address abran@abranlezama.dev
-awslocal ses verify-email-identity --email-address mario@abranlezama.dev
-awslocal ses verify-email-identity --email-address claudia@abranlezama.dev
+awslocal ses verify-email-identity --email-address noreply@showcasecloudproject.com
+awslocal ses verify-email-identity --email-address info@showcasecloudproject.com
+awslocal ses verify-email-identity --email-address abran@showcasecloudproject.com
+awslocal ses verify-email-identity --email-address mario@showcasecloudproject.com
+awslocal ses verify-email-identity --email-address claudia@showcasecloudproject.com
 
 awslocal dynamodb create-table \
     --table-name local-todo-app-breadcrumb \
