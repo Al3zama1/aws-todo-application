@@ -71,6 +71,11 @@ public class Todo {
     )
     private List<Person> collaborators;
 
+    /*
+    As this confirmCollaboration() method runs within a transaction, Hibernate will determine the necessary
+    SQL statements with its dirty-checking mecha- nism,
+    and we don’t have to explicitly call save() to persist this change.
+     */
     public void addCollaborator(Person person) {
         collaborators.add(person);
         person.getCollaborativeTodos().add(this);

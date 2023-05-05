@@ -34,7 +34,7 @@ public class TodoSharingListener {
         log.info("Incoming todo sharing payload: {}", payload);
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply@abranlezama.dev");
+        message.setFrom("noreply.showcasecloudproject.com");
         message.setTo(payload.getCollaboratorEmail());
         message.setSubject("A todo was shared with your");
         message.setText(String.format(
@@ -58,6 +58,9 @@ public class TodoSharingListener {
                 payload.getCollaboratorId(),
                 payload.getToken()
         ));
+        /* TODO: 5/4/23 Make SQS messages idempotent, meaning that collaborators should not get invitation for same todo more than once.
+            This can be the case as we are not using FIFO SQS queue and messages are delivered at least once.
+         */
         mailSender.send(message);
 
         log.info("Successfully sent todo collaboration request.");

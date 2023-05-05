@@ -129,6 +129,13 @@
             <artifactId>lombok</artifactId>
             <optional>true</optional>
         </dependency>
+        <!--provides interface implementations for Spring MailSender and Java JavaMailSender
+            that use AWS SES as the underlying transport system
+        -->
+        <dependency>
+            <groupId>io.awspring.cloud</groupId>
+            <artifactId>spring-cloud-aws-starter-ses</artifactId>
+        </dependency>
     </dependencies>
 
     <dependencyManagement>

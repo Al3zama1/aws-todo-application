@@ -20,3 +20,4 @@ spring:
 custom:
   sharing-queue: application-todo-sharing
   auto-confirm-collaborations: false
+  confirm-email-from-address: noreply.showcasecloudproject.com
