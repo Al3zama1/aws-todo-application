@@ -28,4 +28,5 @@ spring:
         static: us-west-1
 
 custom:
+  auto-confirm-collaborations: true
   use-cognito-as-identity-provider: false

@@ -16,3 +16,7 @@ spring:
       instance:
         data:
           enabled: false
+
+custom:
+  sharing-queue: application-todo-sharing
+  auto-confirm-collaborations: false
