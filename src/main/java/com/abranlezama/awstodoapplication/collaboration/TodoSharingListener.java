@@ -34,7 +34,7 @@ public class TodoSharingListener {
         log.info("Incoming todo sharing payload: {}", payload);
 
         SimpleMailMessage message = new SimpleMailMessage();
-        message.setFrom("noreply.showcasecloudproject.com");
+        message.setFrom("noreply@showcasecloudproject.com");
         message.setTo(payload.getCollaboratorEmail());
         message.setSubject("A todo was shared with your");
         message.setText(String.format(

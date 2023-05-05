@@ -18,6 +18,7 @@ public class TodoCollaborationNotification {
 
     private String token;
 
+
     public TodoCollaborationNotification(TodoCollaborationRequest todoCollaborationRequest) {
         this.collaboratorEmail = todoCollaborationRequest.getCollaborator().getEmail();
         this.collaboratorName = todoCollaborationRequest.getCollaborator().getName();

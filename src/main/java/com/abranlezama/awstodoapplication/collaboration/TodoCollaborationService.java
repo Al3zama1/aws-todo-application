@@ -4,6 +4,9 @@ import com.abranlezama.awstodoapplication.Person.Person;
 import com.abranlezama.awstodoapplication.Person.PersonRepository;
 import com.abranlezama.awstodoapplication.todo.Todo;
 import com.abranlezama.awstodoapplication.todo.TodoRepository;
+import com.fasterxml.jackson.core.JsonParseException;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import io.awspring.cloud.sqs.operations.SqsTemplate;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -20,6 +23,7 @@ public class TodoCollaborationService {
     private final TodoRepository todoRepository;
     private final PersonRepository personRepository;
     private final TodoCollaborationRequestRepository todoCollaborationRequestRepository;
+    private final ObjectMapper objectMapper;
 
     private final SqsTemplate sqsTemplate;
     private final String todoSharingQueueName;
@@ -33,12 +37,13 @@ public class TodoCollaborationService {
             TodoRepository todoRepository,
             PersonRepository personRepository,
             TodoCollaborationRequestRepository todoCollaborationRequestRepository,
-            SqsTemplate sqsTemplate) {
+            SqsTemplate sqsTemplate, ObjectMapper objectMapper) {
         this.todoRepository = todoRepository;
         this.personRepository = personRepository;
         this.todoCollaborationRequestRepository = todoCollaborationRequestRepository;
         this.sqsTemplate = sqsTemplate;
         this.todoSharingQueueName = todoSharingQueueName;
+        this.objectMapper = objectMapper;
     }
 
     public String shareWithCollaborators(String todoOwnerEmail, Long todoId, Long collaboratorId) {
@@ -64,7 +69,17 @@ public class TodoCollaborationService {
 
         todoCollaborationRequestRepository.save(collaboration);
 
-        sqsTemplate.send(todoSharingQueueName, new TodoCollaborationNotification(collaboration));
+        TodoCollaborationNotification notification = new TodoCollaborationNotification(collaboration);
+
+        String json = "";
+
+        try {
+            json = objectMapper.writeValueAsString(notification);
+        } catch (JsonProcessingException ex) {
+            throw new RuntimeException(ex.getMessage());
+        }
+
+        sqsTemplate.send(todoSharingQueueName, json);
 
         return collaborator.getName();
     }
