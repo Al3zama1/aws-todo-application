@@ -18,7 +18,7 @@
 
     <link rel="stylesheet" th:href="@{/webjars/bootstrap/css/bootstrap.min.css}">
     <link rel="stylesheet" th:href="@{/webjars/font-awesome/css/all.css}">
-    <link rel="stylesheet" th:href="@{/css/styles.css}">
+    <link rel="stylesheet" th:href="@{static}">
 
     <script th:src="@{/webjars/jquery/jquery.min.js}"></script>
     <script th:src="@{/webjars/popper.js/umd/popper.min.js}"></script>
@@ -43,6 +43,13 @@
     <div th:replace="~{fragments/modals :: confirmDeletionModal}"></div>
     <div th:replace="~{fragments/footer :: footer}"></div>
 
+    <!--
+        In case the user is logged in (since in our use case it only makes sense for authenticated users
+        to receive messages on the progress of their todos) we call the function connectToWebSocketEndpoint()
+        with the authenticated user’s email address as an argument.
+
+        The email address here serves as an identifier, so we can tell which messages to display to which user.
+    -->
     <script sec:authorize="isAuthenticated()">
         connectToWebSocketEndpoint('[[${#authentication.principal.attributes.email}]]');
     </script>

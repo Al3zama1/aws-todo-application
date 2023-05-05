@@ -17,4 +17,9 @@ spring:
             issuer-uri: ${COGNITO_PROVIDER_URL}
 
 custom:
+  sharing-queue: ${TODO_SHARING_QUEUE_NAME}
+  web-socket-relay-endpoint: ${WEB_SOCKET_RELAY_ENDPOINT}
+  web-socket-relay-username: ${WEB_SOCKET_RELAY_USERNAME}
+  web-socket-relay-password: ${WEB_SOCKET_RELAY_PASSWORD}
+  web-socket-relay-use-ssl: true
   use-cognito-as-identity-provider: true

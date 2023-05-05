@@ -29,7 +29,20 @@ spring:
       region:
         static: us-west-1
 
+  thymeleaf:
+    cache: false
+    prefix: file:src/main/resources/templates/
+  web:
+    resources:
+      static-locations: file:src/main/resources/static/
+      cache:
+        period: 0
+
 custom:
+  web-socket-relay-endpoint: localhost:61613
+  web-socket-relay-username: admin
+  web-socket-relay-password: admin
+  web-socket-relay-use-ssl: false
   auto-confirm-collaborations: true
   use-cognito-as-identity-provider: false
   environment: local

@@ -22,6 +22,9 @@ public class WebSecurityConfig {
                 .csrf()
                 .ignoringRequestMatchers(
                         "/todo-updates/**",
+                        /*
+                        WebSocket connections to our relay don’t require the user of our application to sign in first.
+                         */
                         "/websocket/**"
                 )
                 .and()

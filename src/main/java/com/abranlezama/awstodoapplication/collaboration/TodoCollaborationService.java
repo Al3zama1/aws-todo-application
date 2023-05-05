@@ -28,6 +28,8 @@ public class TodoCollaborationService {
     private final SqsTemplate sqsTemplate;
     private final String todoSharingQueueName;
 
+    private final SimpMessagingTemplate simpMessagingTemplate;
+
     private static final String INVALID_TODO_ID = "Invalid todo ID: ";
     private static final String INVALID_PERSON_ID = "Invalid person ID: ";
     private static final String INVALID_PERSON_EMAIL = "Invalid person Email: ";
@@ -37,12 +39,15 @@ public class TodoCollaborationService {
             TodoRepository todoRepository,
             PersonRepository personRepository,
             TodoCollaborationRequestRepository todoCollaborationRequestRepository,
-            SqsTemplate sqsTemplate, ObjectMapper objectMapper) {
+            SqsTemplate sqsTemplate,
+            SimpMessagingTemplate simpMessagingTemplate,
+            ObjectMapper objectMapper) {
         this.todoRepository = todoRepository;
         this.personRepository = personRepository;
         this.todoCollaborationRequestRepository = todoCollaborationRequestRepository;
         this.sqsTemplate = sqsTemplate;
         this.todoSharingQueueName = todoSharingQueueName;
+        this.simpMessagingTemplate = simpMessagingTemplate;
         this.objectMapper = objectMapper;
     }
 
@@ -112,6 +117,8 @@ public class TodoCollaborationService {
         String message = "User " + name + " has accepted your collaboration request for todo #"
                 + collaborationRequest.getTodo().getId() + ".";
         String ownerEmail = collaborationRequest.getTodo().getOwner().getEmail();
+
+        simpMessagingTemplate.convertAndSend("/topic/todoUpdates/" + ownerEmail, subject + " " + message);
 
         return true;
     }
