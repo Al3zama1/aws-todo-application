@@ -155,7 +155,21 @@ public class ServiceApp {
                                         "ses:SendEmail",
                                         "ses:SendRawEmail"
                                 ))
-                                .build()
+                                .build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowDynamoTableAccess")
+                                .effect(Effect.ALLOW)
+                                .resources(
+                                        List.of(String.format("arn:aws:dynamodb:%s:%s:table/%s", region, accountId, applicationEnvironment.prefix("breadcrumb")))
+                                )
+                                .actions(List.of(
+                                        "dynamodb:Scan",
+                                        "dynamodb:Query",
+                                        "dynamodb:PutItem",
+                                        "dynamodb:GetItem",
+                                        "dynamodb:BatchWriteItem",
+                                        "dynamodb:BatchWriteGet"
+                                )).build()
                         )
                 );
 
