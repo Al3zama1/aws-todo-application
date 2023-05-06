@@ -17,6 +17,7 @@ import software.constructs.Construct;
 import java.util.*;
 
 import static com.abranlezama.cdk.Validations.requireNonEmpty;
+import static java.util.Collections.singletonList;
 
 public class ServiceApp {
     public static void main(String[] args) {
@@ -110,7 +111,9 @@ public class ServiceApp {
 
                  */
                 .withStickySessionsEnabled(true)
-                .withHealthCheckIntervalSeconds(30)
+                .withHealthCheckIntervalSeconds(30) // needs to be long enough to allow for slow start up with low-end computing instances
+                .withAwsLogsDateTimeFormat("%Y-%m-%dT%H:%M:%S.%f%z")
+                .withHealthCheckPath("/actuator/health")
                 /*
                 Disabled self signup for admins to only be able to add new users to the user pool.
                 The application will act as such an admin and create our users. For this to work
@@ -169,7 +172,13 @@ public class ServiceApp {
                                         "dynamodb:GetItem",
                                         "dynamodb:BatchWriteItem",
                                         "dynamodb:BatchWriteGet"
-                                )).build()
+                                )).build(),
+                        PolicyStatement.Builder.create()
+                                .sid("AllowSendingMetricsToCloudWatch")
+                                .effect(Effect.ALLOW)
+                                .resources(singletonList("*"))
+                                .actions(singletonList("cloudwatch:PutMetricData"))
+                                .build()
                         )
                 );
 
