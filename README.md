@@ -30,7 +30,7 @@ on Amazon MQ.
 ![Todo application architecture](assets/todo-app-architecture.png)
 
 ### Network Architecture
-![Todo application architecture](assets/aws-todo-vpc-architecture.png)
+![Todo application architecture](assets/todo-app-vpc-diagram.png)
 
 
 
