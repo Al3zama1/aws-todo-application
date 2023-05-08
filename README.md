@@ -4,6 +4,8 @@
 Developed Todo application where users can create todos and collaborate with other users by sharing
 todos with each other. 
 
+![Todo application](assets/todo-app.png)
+
 ## Application Features
 - **Registration and Login:** Spring security is used in conjunction with Amazon Cognito
 to achieve user authentication and authorization.
@@ -24,7 +26,6 @@ on Amazon MQ.
 - AWS CDK, SES, Cognito, RDS, SQS, ECS, and ECR
 
 ## Architecture
-
 
 ### Application Architecture
 ![Todo application architecture](assets/todo-app-architecture.png)
