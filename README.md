@@ -109,6 +109,7 @@ OS name: "mac os x", version: "13.1", arch: "aarch64", family: "mac"
   - Replace AWS region with your own.
   - Replace application domain with your own Route 53 domain.
   - Execute Scripts in file package.json in the order they appear.
+  - After running the certificate script, the certificate arn will be outputed to the console. Use it to replace the sslCertificateArn in cdk.json file.
 
 ```
   "scripts": {
